@@ -1,0 +1,21 @@
+{
+  "name": "pg-mcp-server",
+  "version": "1.0.0",
+  "description": "Custom MCP server for PostgreSQL with read-only default",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "bin": {
+    "pg-mcp": "dist/index.cjs"
+  },
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --platform=node --format=cjs --outfile=dist/index.cjs --external:pg",
+    "prepare": "npm run build",
+    "start": "node dist/index.cjs"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}
