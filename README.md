@@ -1,6 +1,8 @@
 # pg-mcp-server
 
-A custom MCP (Model Context Protocol) server that gives Claude read-only access to a PostgreSQL database. Implements the MCP protocol directly over stdio — no SDK dependency.
+A custom MCP (Model Context Protocol) server that gives Claude access to a PostgreSQL database. Implements the MCP protocol directly over stdio — no SDK dependency.
+
+**Read-only by default.** Queries run inside a `READ ONLY` transaction so Claude can't accidentally mutate data. Pass `--no-read-only` to unlock full write access (INSERT, UPDATE, DELETE, DDL) when you need Claude to make changes.
 
 ## Tools
 
@@ -29,7 +31,24 @@ Add to your project's `.mcp.json`:
       "args": [
         "pg-mcp",
         "postgresql://mcp_reader:your_password@localhost:5432/your_database",
-        "--read-only",
+        "--timeout", "30000"
+      ]
+    }
+  }
+}
+```
+
+To allow Claude to write data (migrations, seed scripts, etc.), pass `--no-read-only`:
+
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "pg-mcp",
+        "postgresql://mcp_writer:your_password@localhost:5432/your_database",
+        "--no-read-only",
         "--timeout", "30000"
       ]
     }
